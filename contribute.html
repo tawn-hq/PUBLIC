@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>contribute to tawn</title>
+
+<meta name="description" content="How to help build Tawn. Most useful contributions are not code — telling us where it confused you counts. Plus the full development setup, the rules that apply, and where to start reading.">
+<link rel="canonical" href="https://tawn-hq.github.io/PUBLIC/contribute.html">
+<meta name="robots" content="index, follow, max-snippet:-1">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Tawn">
+<meta property="og:title" content="Contribute to Tawn">
+<meta property="og:description" content="How to help — including the ways that are not code.">
+<meta property="og:url" content="https://tawn-hq.github.io/PUBLIC/contribute.html">
+<meta property="og:image" content="https://tawn-hq.github.io/PUBLIC/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#FAF7F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191510" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=jetbrains-mono@400&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=jetbrains-mono@400&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Tawn — home">
+      <svg class="mark" width="22" height="22" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+        <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+        <ellipse cx="128" cy="108" rx="27" ry="17" fill="var(--lapis)"/>
+      </svg>
+      <span class="brand-word">taw<b>n</b></span>
+    </a>
+    <nav>
+      <a class="nav-wide" href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="contribute.html" aria-current="page">Contribute</a>
+      <a href="https://github.com/tawn-hq/tawn">GitHub&nbsp;↗</a>
+    </nav>
+  </div>
+</header>
+
+<div class="docs-shell wrap">
+
+<aside class="toc" aria-label="Contents">
+  <p class="toc-title">Contributing</p>
+  <nav>
+    <p class="toc-part">Anyone</p>
+    <ul>
+      <li><a href="#nocode">Helping without code</a></li>
+    </ul>
+    <p class="toc-part">Developers</p>
+    <ul>
+      <li><a href="#setup">Setting up</a></li>
+      <li><a href="#rules">The rules</a></li>
+      <li><a href="#gotchas">Things that bite</a></li>
+      <li><a href="#start">Where to start</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<main class="doc">
+
+<h1>Contributing</h1>
+<p class="doc-lede">
+  Tawn is built in the open and shaped by what people say they need. The most
+  valuable contributions so far have not been code.
+</p>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<h2 id="nocode">Helping without writing code</h2>
+
+<p>
+  If you have used Tawn for ten minutes, you already know something the people
+  building it do not.
+</p>
+
+<dl class="defs">
+  <dt>Tell us where it lost you</dt>
+  <dd>“I stopped at the PostgreSQL step” is more useful than a bug report. Confusion is a defect; we just cannot see it from inside.</dd>
+
+  <dt>Say what you expected to happen</dt>
+  <dd>When something behaves oddly, the gap between what you assumed and what it did is the actual problem. Describe both.</dd>
+
+  <dt>Tell us what is missing</dt>
+  <dd>Features get built in the order people ask for them. Nothing on the roadmap is fixed.</dd>
+
+  <dt>Improve the words</dt>
+  <dd>Documentation lives in the repository as ordinary markdown. A pull request fixing a sentence that misled you is a real contribution, and the easiest kind to make.</dd>
+</dl>
+
+<p>
+  <a href="index.html#feedback">The feedback form</a> reaches us directly. So
+  does <a href="https://github.com/tawn-hq/tawn/issues">opening an issue</a>, or
+  email at
+  <a href="mailto:testimonyadekoya.02@gmail.com">testimonyadekoya.02@gmail.com</a>.
+</p>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<h2 id="setup">Setting up to develop</h2>
+
+<p>
+  You need Python 3.12, PostgreSQL with pgvector, and Node 20 if you are
+  touching the interface.
+</p>
+
+<div class="term">
+  <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+  <div class="term-plain"><pre><code><span class="p">$</span> git clone https://github.com/tawn-hq/tawn.git
+<span class="p">$</span> cd tawn
+
+<span class="p">$</span> python3 -m venv .venv
+<span class="p">$</span> .venv/bin/pip install -e ".[full,dev]"
+<span class="p">$</span> .venv/bin/tawn db setup
+
+<span class="c"># enables the commit-message check</span>
+<span class="p">$</span> git config core.hooksPath .githooks</code></pre></div>
+</div>
+
+<p>Then confirm it works:</p>
+
+<div class="term">
+  <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+  <div class="term-plain"><pre><code><span class="p">$</span> .venv/bin/python -m pytest -q
+<span class="c"># expect 1,171 passed, about four minutes</span></code></pre></div>
+</div>
+
+<p>
+  If a large block fails at once, PostgreSQL is usually unreachable rather than
+  your change being wrong.
+</p>
+
+<h3>The interface</h3>
+<div class="term">
+  <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+  <div class="term-plain"><pre><code><span class="p">$</span> cd frontend && npm install
+<span class="p">$</span> npm run dev        <span class="c"># proxies /api to :8787</span></code></pre></div>
+</div>
+<p>
+  Run <code>tawn web start</code> in another terminal so there is an API to
+  proxy to. After a production build you must copy the output into the package,
+  or an installed copy serves a stale interface while your dev server looks
+  correct:
+</p>
+<div class="term">
+  <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+  <div class="term-plain"><pre><code><span class="p">$</span> npm run build
+<span class="p">$</span> rm -rf ../src/tawn/web/dist && cp -r dist ../src/tawn/web/dist</code></pre></div>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<h2 id="rules">The rules that apply</h2>
+
+<dl class="defs">
+  <dt>Grant-check every path</dt>
+  <dd>Anything reading or writing outside <code>~/.tawn</code> goes through <code>path_allowed()</code> first, and any tool needing network or shell access checks <code>capability_allowed()</code>. Skipping that is the one defect that gets a change rejected outright — it is the gate the whole design rests on.</dd>
+
+  <dt>Never expose the web API</dt>
+  <dd>It binds to localhost and has no authentication. Anything that tunnels or rebinds it is a security defect until sign-in ships.</dd>
+
+  <dt>Prices come from vendor documentation</dt>
+  <dd>Never from memory. A missing price is reported honestly as unpriced; a wrong one corrupts the spend figures with no signal that anything is off.</dd>
+
+  <dt>Test first</dt>
+  <dd>A failing test, then the smallest change that makes it pass. Tests must never touch your real <code>~/.tawn</code> — use the <code>tawn_home</code> fixture.</dd>
+
+  <dt>Conventional commits</dt>
+  <dd><code>feat(scope): imperative subject</code>, lowercase, no trailing period. The hook rejects anything else. Explain <em>why</em> in the body, not what.</dd>
+
+  <dt>Secrets stay in the keyring</dt>
+  <dd>Never in code, never in committed config, never in a model's context. Configuration may hold the <em>names</em> of environment variables, never their values.</dd>
+</dl>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<h2 id="gotchas">Things that will bite you</h2>
+
+<dl class="defs">
+  <dt>Alembic autogenerate does not work here</dt>
+  <dd>The config points at an in-memory database, so autogenerate cannot see the real schema — and when it runs it emits a reference with no import. Write migrations by hand.</dd>
+
+  <dt>A running server holds old code</dt>
+  <dd>After changing anything the background process touches: <code>tawn web stop &amp;&amp; tawn web start</code>. <code>tawn doctor</code> warns when the running copy is older than the files on disk.</dd>
+
+  <dt>The vector column has no fixed width, on purpose</dt>
+  <dd>Pinning it to one model's size meant every model switch broke indexing. Different widths coexist, which is why changing model still requires re-indexing.</dd>
+
+  <dt>Silent exception handlers are load-bearing — and overused</dt>
+  <dd>The background loop runs several jobs that are each best-effort, so one failing must not stop the others. There are also 26 of them, which is too many. Do not add one without a comment saying why.</dd>
+</dl>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<h2 id="start">Where to start</h2>
+
+<ol class="plain-ol">
+  <li><strong>The decision log</strong> — <code>docs/ROADMAP.md</code>, newest first. The fastest way to understand why the code looks the way it does, including the mistakes.</li>
+  <li><strong>The permission model</strong> — <code>src/tawn/capability/grants.py</code>, about 150 lines.</li>
+  <li><strong>What the model can reach</strong> — <code>src/tawn/model/tools.py</code>.</li>
+  <li><strong>The pipeline</strong> — <code>src/tawn/compiler/compiler.py</code>, which everything else feeds.</li>
+</ol>
+
+<p>
+  Full development notes live in
+  <a href="https://github.com/tawn-hq/tawn/blob/main/INSTALL.md">INSTALL.md</a>
+  and the rules in
+  <a href="https://github.com/tawn-hq/tawn/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.
+</p>
+
+<div class="callout">
+  <strong>No contribution is too small.</strong> A typo fix, a sentence that
+  reads better, a note saying the install guide assumed something you did not
+  know — all of it counts.
+</div>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="index.html" style="margin-bottom:.6rem" aria-label="Tawn — home">
+        <svg class="mark" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true">
+          <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+          <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+          <ellipse cx="128" cy="108" rx="27" ry="17" fill="var(--lapis)"/>
+        </svg>
+        <span class="brand-word" style="font-size:1rem">taw<b>n</b></span>
+      </a>
+      <p class="foot-mono" style="margin:0">A cairn marks the path for whoever comes next.</p>
+    </div>
+    <div>
+      <a href="index.html">Home</a> ·
+      <a href="docs.html">Docs</a> ·
+      <a href="contribute.html">Contribute</a> ·
+      <a href="https://github.com/tawn-hq/tawn">Source</a> ·
+      <a href="index.html#feedback">Feedback</a>
+    </div>
+    <div class="foot-mono">MIT licensed · built in the open</div>
+  </div>
+</footer>
+
+</body>
+</html>

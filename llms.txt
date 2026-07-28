@@ -1,0 +1,79 @@
+# Tawn
+
+> A local-first memory core that sits underneath the AI agents you already use.
+> It does not replace Claude Code, Cursor, ChatGPT or Codex — it gives all of
+> them one shared memory on your own machine, and records which agent changed
+> what.
+
+Tawn is free, MIT licensed, and runs entirely offline with a local model.
+
+## What problem it solves
+
+Every AI agent keeps its own isolated memory. Explain your architecture to one
+tool and the next one still knows nothing. Tawn compiles what you already have
+— notes, documents, repositories, and the session transcripts your agents write
+to disk — into a single searchable memory, then serves it to every agent over
+MCP (Model Context Protocol).
+
+## What makes it different
+
+- **It is a layer, not a competitor.** Keep the agents you like. Tawn sits
+  beneath them.
+- **Authorship attribution.** Tawn records which agent produced which change,
+  including uncommitted work, using git identity, correlation against agents'
+  own session logs, and timing heuristics — each result carrying its
+  confidence. Nothing else does this.
+- **Local by default.** Data lives in PostgreSQL on your machine. Tawn starts
+  with permission to read nothing and reads only paths you grant.
+- **Honest reporting.** Model calls it cannot price are marked unpriced rather
+  than counted as free. Low-confidence attributions read "likely" rather than
+  being asserted.
+- **A verifiable audit log.** Hash-chained; verification names the exact point
+  a chain breaks.
+
+## Install
+
+```
+pipx install tawn
+tawn setup
+tawn grant confirm
+tawn compile
+```
+
+Connect an agent by adding to ~/.claude.json:
+`"tawn": { "command": "tawn", "args": ["mcp"] }`
+
+## Requirements
+
+Python 3.12+, PostgreSQL 14+ with pgvector. Ollama optional for local models.
+Tesseract optional for reading scanned documents.
+
+## Key facts
+
+- License: MIT
+- Package: https://pypi.org/project/tawn/
+- Source: https://github.com/tawn-hq/tawn
+- Domains it files memory into: work, wealth, research, academic, hobby
+- Interfaces: command line, local web UI, MCP server, MCP client
+- Status: active development. Multi-user sharing is not built yet. The web API
+  has no authentication and binds to localhost only.
+
+## Docs
+
+On the site — written for readers who are not developers, with every term
+explained where it appears and again in a glossary:
+
+- Full documentation: https://tawn-hq.github.io/PUBLIC/docs.html
+- How to contribute: https://tawn-hq.github.io/PUBLIC/contribute.html
+
+In the repository:
+
+- User guide: https://github.com/tawn-hq/tawn/blob/main/docs/USER_GUIDE.md
+- Contributing rules: https://github.com/tawn-hq/tawn/blob/main/CONTRIBUTING.md
+- Development setup: https://github.com/tawn-hq/tawn/blob/main/INSTALL.md
+
+## Contact
+
+Feedback form: https://tawn-hq.github.io/PUBLIC/#feedback
+Issues: https://github.com/tawn-hq/tawn/issues
+Email: testimonyadekoya.02@gmail.com

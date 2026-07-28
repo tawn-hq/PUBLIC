@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# AI crawlers are explicitly welcome — see /llms.txt for a plain-text summary
+# written for them rather than scraped out of the markup.
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://tawn-hq.github.io/PUBLIC/sitemap.xml

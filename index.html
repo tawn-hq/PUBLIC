@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tawn — one memory for every AI agent you already use</title>
+
+<meta name="description" content="Tawn is a local-first memory core that sits under Claude Code, Cursor, ChatGPT and Codex. It does not replace your agents — it gives them one shared memory, and an audit trail showing which agent changed what, across every project.">
+<link rel="canonical" href="https://tawn-hq.github.io/PUBLIC/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="Tawn">
+<meta name="keywords" content="AI memory, agent memory, local-first AI, MCP server, Claude Code memory, Cursor memory, shared context, AI audit trail, authorship attribution, personal knowledge base, RAG, pgvector">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tawn">
+<meta property="og:title" content="Tawn — one memory for every AI agent you already use">
+<meta property="og:description" content="Your agents each start from nothing, every session. Tawn gives them one shared memory on your own machine — and shows you which agent changed what.">
+<meta property="og:url" content="https://tawn-hq.github.io/PUBLIC/">
+<meta property="og:image" content="https://tawn-hq.github.io/PUBLIC/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tawn — one memory for every AI agent you already use">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tawn — one memory for every AI agent you already use">
+<meta name="twitter:description" content="Your agents each start from nothing, every session. Tawn gives them one shared memory on your own machine.">
+<meta name="twitter:image" content="https://tawn-hq.github.io/PUBLIC/og.png">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#FAF7F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191510" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=jetbrains-mono@400&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=jetbrains-mono@400&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Tawn",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux, macOS, Windows",
+      "description": "A local-first memory core that sits beneath the AI agents you already use. Tawn compiles your notes, documents, repositories and agent transcripts into one searchable memory, exposes it to every agent over MCP, and records which agent changed what.",
+      "url": "https://tawn-hq.github.io/PUBLIC/",
+      "softwareVersion": "0.3.0",
+      "license": "https://opensource.org/licenses/MIT",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "One shared memory across Claude Code, Cursor, ChatGPT and Codex",
+        "Runs entirely on your machine — nothing leaves unless you allow it",
+        "Authorship attribution: which agent wrote which change",
+        "Hash-chained audit log of every access",
+        "Model cost ledger across all providers",
+        "Capability grants — deny-all by default",
+        "MCP server and client",
+        "Skills that sync to every agent you use"
+      ],
+      "downloadUrl": "https://pypi.org/project/tawn/",
+      "codeRepository": "https://github.com/tawn-hq/tawn"
+    },
+    {
+      "@type": "Organization",
+      "name": "Tawn",
+      "url": "https://tawn-hq.github.io/PUBLIC/",
+      "sameAs": ["https://github.com/tawn-hq"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does Tawn replace Claude Code, Cursor or ChatGPT?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Tawn sits underneath them. You keep using whichever agent you prefer for whichever task; Tawn gives all of them the same memory and records what each one did. It is a layer, not a competitor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is my data stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On your machine, in a PostgreSQL database you own. Tawn reads only the paths you explicitly grant, and refuses to send anything to a cloud model unless you opt in per operation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Tawn know which agent wrote a piece of code?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three ordered signals. Git author and committer identity where a commit exists; correlation against the session logs your coding agents already write, which attributes uncommitted work; and edit-timing heuristics as a last resort. Each result carries its confidence, and a low-confidence guess is shown as 'likely' rather than asserted."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Tawn need an API key or a subscription?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Tawn is free and MIT licensed. It works with a local model through Ollama and costs nothing. If you add your own provider keys it will use them and record every call's cost in a ledger you can read."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if I am not a developer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Today Tawn is a command-line tool with a local web interface, and setting it up means running a few commands. If that is a barrier, say so through the feedback form — it is the kind of thing that shapes what gets built next."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Tawn finished?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It is in active development and the roadmap is public. Sharing memory with other people is not built yet, and the web interface has no authentication — which is why it binds to localhost and refuses to expose itself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does Tawn actually read?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only the directories you list under 'read:' in your grants file. It starts with permission to read nothing at all. Every access is written to a hash-chained audit log you can verify."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Tawn — home">
+      <svg class="mark" width="22" height="22" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+        <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+        <ellipse cx="128" cy="108" rx="27" ry="17" fill="var(--lapis)"/>
+      </svg>
+      <span class="brand-word">taw<b>n</b></span>
+    </a>
+    <nav>
+      <a class="nav-wide" href="#problem">Why</a>
+      <a class="nav-wide" href="#install">Install</a>
+      <a href="docs.html">Docs</a>
+      <a class="nav-wide" href="contribute.html">Contribute</a>
+      <a class="nav-wide" href="#feedback">Feedback</a>
+      <a href="https://github.com/tawn-hq/tawn">GitHub&nbsp;↗</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ── hero ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="wrap">
+    <h1>Your agents forget. <em>You shouldn't have to.</em></h1>
+    <p class="lede">
+      Tawn is a memory core that runs on your own machine and sits underneath
+      the AI tools you already use. It does not replace them. It gives them one
+      shared memory — and keeps a record of which one changed what.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#install">Install Tawn</a>
+      <a class="btn btn-ghost" href="https://github.com/tawn-hq/tawn">Read the source</a>
+      <span class="hero-note">MIT · runs offline · nothing leaves your machine</span>
+    </div>
+
+    <!-- The signature: a real work session as Tawn records it. Nothing else
+         on the page is this dark, because nothing else matters this much. -->
+    <div class="ledger">
+      <div class="ledger-bar">
+        <span class="dot" aria-hidden="true"></span>
+        <span>work session · 14:02 – 15:47 · <strong>clausewise</strong></span>
+      </div>
+      <div class="ledger-body">
+        <table>
+          <caption class="visually-hidden">A recorded work session showing each changed file and who changed it</caption>
+          <tbody>
+            <tr>
+              <td class="t">14:02</td><td>engine/parser.py</td>
+              <td class="num"><span class="add">+128</span> <span class="del">−14</span></td>
+              <td><span class="who agent"><span class="pip"></span>agent:claude-code</span></td>
+            </tr>
+            <tr>
+              <td class="t">14:19</td><td>engine/schema.sql</td>
+              <td class="num"><span class="add">+31</span> <span class="del">−0</span></td>
+              <td><span class="who you"><span class="pip"></span>you</span></td>
+            </tr>
+            <tr>
+              <td class="t">14:44</td><td>tests/test_parser.py</td>
+              <td class="num"><span class="add">+96</span> <span class="del">−3</span></td>
+              <td><span class="who agent"><span class="pip"></span>agent:codex</span></td>
+            </tr>
+            <tr>
+              <td class="t">15:31</td><td>README.md</td>
+              <td class="num"><span class="add">+7</span> <span class="del">−7</span></td>
+              <td><span class="who maybe"><span class="pip"></span>likely an agent</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ledger-foot">
+        <span>23 files · +412 −87</span>
+        <span>closed by commit</span>
+        <span>18 agent · 4 you · 1 uncertain</span>
+      </div>
+    </div>
+    <p class="ledger-caption">
+      Tawn wrote this while you worked. The last line is marked uncertain
+      because it was inferred from timing rather than evidence — a guess that
+      says it is a guess.
+    </p>
+  </div>
+</section>
+
+<!-- ── the problem ──────────────────────────────────────────────────── -->
+<section class="band" id="problem">
+  <div class="wrap">
+    <p class="eyebrow">
+      <svg width="14" height="14" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+      </svg>
+      The problem
+    </p>
+    <div class="split">
+      <div>
+        <h2>Every agent starts from nothing, every single time.</h2>
+        <p class="sub">
+          You explained the architecture to Claude Code on Monday. On Tuesday
+          you explained it again to Cursor. On Wednesday ChatGPT suggested the
+          approach you rejected in March, because nothing told it you had.
+        </p>
+        <p class="sub">
+          The models are not the bottleneck any more. The context is. Each tool
+          keeps its own island of memory, none of them can see the others, and
+          the work you did to get one of them up to speed is thrown away the
+          moment you close the tab.
+        </p>
+      </div>
+      <div class="silos" role="list">
+        <div class="silo" role="listitem">
+          <h3>Claude Code</h3>
+          <p>own history · sealed</p>
+        </div>
+        <div class="silo" role="listitem">
+          <h3>Cursor</h3>
+          <p>own history · sealed</p>
+        </div>
+        <div class="silo" role="listitem">
+          <h3>ChatGPT</h3>
+          <p>own history · sealed</p>
+        </div>
+        <div class="silo" role="listitem">
+          <h3>Codex</h3>
+          <p>own history · sealed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── the position ─────────────────────────────────────────────────── -->
+<section class="band" id="position">
+  <div class="wrap">
+    <p class="eyebrow">
+      <svg width="14" height="20" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+        <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+      </svg>
+      Where Tawn sits
+    </p>
+    <h2>Not another agent. The floor the others stand on.</h2>
+    <p class="sub">
+      Tawn is not trying to win the assistant war, and it does not want you to
+      switch. Keep Claude Code for refactors, Cursor for edits, ChatGPT for
+      whatever you use ChatGPT for. Tawn speaks MCP, so each of them can read
+      the same memory — and write back into it.
+    </p>
+    <p class="sub">
+      The result is that the context you built once is there in all of them,
+      and the work each of them did is visible to you afterwards.
+    </p>
+    <div class="rows">
+      <div class="row">
+        <h3>Compiles what you already have</h3>
+        <p>Notes, documents, repositories, and the session transcripts your agents already write to disk. Nothing new to maintain.</p>
+      </div>
+      <div class="row">
+        <h3>Serves every agent over MCP</h3>
+        <p>Add one entry to <code>claude.json</code> and your tools share a memory instead of each starting from zero.</p>
+      </div>
+      <div class="row">
+        <h3>Records who did what</h3>
+        <p>Git identity, then correlation against your agents' own session logs, then timing. Uncommitted work is attributed too, and every result carries its confidence.</p>
+      </div>
+      <div class="row">
+        <h3>Stays on your machine</h3>
+        <p>PostgreSQL you own. It reads only the paths you grant, starting from nothing at all, and refuses to fall back to a paid cloud model silently.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── what it does ─────────────────────────────────────────────────── -->
+<section class="band" id="what">
+  <div class="wrap">
+    <p class="eyebrow">
+      <svg width="14" height="26" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+        <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+        <ellipse cx="128" cy="108" rx="27" ry="17" fill="#2E5FA3"/>
+      </svg>
+      Across your work
+    </p>
+    <h2>One memory, filed by the life it belongs to.</h2>
+    <p class="sub">
+      Tawn separates what it knows into domains, so asking about a deployment
+      does not surface your reading list. It infers the domain where it can,
+      and leaves it blank where it genuinely cannot — an honest gap beats a
+      confident mislabel.
+    </p>
+    <div class="tags">
+      <span class="tag work">work</span>
+      <span class="tag wealth">wealth</span>
+      <span class="tag research">research</span>
+      <span class="tag academic">academic</span>
+      <span class="tag hobby">hobby</span>
+    </div>
+
+    <div class="rows">
+      <div class="row">
+        <h3>Recall</h3>
+        <p>Search by meaning, not keywords, so you do not have to remember your own phrasing. <code>tawn recall "what did I decide about vector storage"</code></p>
+      </div>
+      <div class="row">
+        <h3>A wiki it wrote itself</h3>
+        <p>People, projects and tools it found in your memory, cross-linked. Opens as an Obsidian vault, because it is just markdown.</p>
+      </div>
+      <div class="row">
+        <h3>Review notes</h3>
+        <p>When a work session ends, Tawn writes what changed, who changed it, and what looks worth a second look.</p>
+      </div>
+      <div class="row">
+        <h3>Every cost, attributed</h3>
+        <p>One ledger across all providers. Calls it cannot price are reported as unpriced rather than quietly counted as free.</p>
+      </div>
+      <div class="row">
+        <h3>Skills that follow you</h3>
+        <p>Write an instruction once; Tawn syncs it into every agent on the machine, and imports the ones they already have.</p>
+      </div>
+      <div class="row">
+        <h3>An audit log you can verify</h3>
+        <p>Hash-chained. If an entry were altered or removed, verification says exactly where the chain breaks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── install ──────────────────────────────────────────────────────── -->
+<section class="band" id="install">
+  <div class="wrap">
+    <p class="eyebrow">
+      <svg width="14" height="26" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+        <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+        <ellipse cx="128" cy="108" rx="27" ry="17" fill="#2E5FA3"/>
+      </svg>
+      Getting started
+    </p>
+    <div class="split">
+      <div>
+        <h2>Four commands, then it is yours.</h2>
+        <p class="sub">
+          You need Python 3.12 and PostgreSQL. The setup wizard handles the
+          database, the extension, the schema and your first model — pressing
+          Enter accepts every default.
+        </p>
+        <p class="sub">
+          Tawn starts able to read nothing. You decide what it sees, and
+          <code>tawn doctor</code> tells you when something is wrong.
+        </p>
+        <p>
+          <a href="https://github.com/tawn-hq/tawn/blob/main/docs/USER_GUIDE.md">Read the full guide&nbsp;↗</a>
+        </p>
+      </div>
+      <div>
+<div class="term">
+          <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+          <ol class="steps">
+            <li>
+              <span class="step-label">Install it</span>
+<pre><code><span class="p">$</span> pipx install tawn</code></pre>
+            </li>
+            <li>
+              <span class="step-label">Set up the home, database and a model</span>
+<pre><code><span class="p">$</span> tawn setup</code></pre>
+              <span class="step-note">A wizard. Enter accepts every default.</span>
+            </li>
+            <li>
+              <span class="step-label">Say what it may read, then build the memory</span>
+<pre><code><span class="p">$</span> tawn grant confirm
+<span class="p">$</span> tawn compile</code></pre>
+            </li>
+            <li>
+              <span class="step-label">Connect an agent — add to <code>~/.claude.json</code></span>
+<pre><code>"tawn": { "command": "tawn", "args": ["mcp"] }</code></pre>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── faq ──────────────────────────────────────────────────────────── -->
+<section class="band" id="faq">
+  <div class="wrap">
+    <h2>Questions people actually ask</h2>
+    <div style="margin-top:1.5rem">
+      <details>
+        <summary>Does this replace Claude Code or Cursor?</summary>
+        <p>No, and it is not trying to. Tawn sits underneath them. You keep whichever agent you like for whichever job; Tawn gives all of them the same memory and records what each one did.</p>
+      </details>
+      <details>
+        <summary>Where does my data go?</summary>
+        <p>Nowhere. It lives in a PostgreSQL database on your machine. Tawn reads only the paths you explicitly grant, and it will not send your corpus to a cloud model unless you turn that on per operation.</p>
+      </details>
+      <details>
+        <summary>How can it tell which agent wrote something?</summary>
+        <p>Three signals, tried in order. Git author and committer identity where a commit exists. Correlation against the session logs your coding agents already write, which catches uncommitted work. Timing heuristics last. Every answer carries its confidence, and a weak one is shown as “likely” rather than stated as fact.</p>
+      </details>
+      <details>
+        <summary>Does it cost anything?</summary>
+        <p>No. It is MIT licensed and works entirely offline with a local model through Ollama. Add your own provider keys if you want stronger models, and Tawn records what every call costs.</p>
+      </details>
+      <details>
+        <summary>What if I am not a developer?</summary>
+        <p>Today, Tawn is a command-line tool with a local web interface, and setting it up means running a few commands. If that is a barrier, the feedback box below is the right place to say so.</p>
+      </details>
+      <details>
+        <summary>Is it finished?</summary>
+        <p>No. It is in active development and the roadmap is public. Sharing memory with other people is not built yet, and the web interface has no authentication — which is why it binds to localhost and refuses to expose itself.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── feedback ─────────────────────────────────────────────────────── -->
+<section class="band feedback" id="feedback">
+  <div class="wrap">
+    <h2>Tell us what is missing.</h2>
+    <p class="sub">
+      Tawn is early and shaped by what people say they need. If something is
+      broken, confusing, or absent, this reaches the people building it.
+    </p>
+
+    <div class="form-status" data-fs-success hidden>
+      <strong>Thank you — that reached us.</strong>
+      If you left an email, you will hear back.
+    </div>
+    <div class="form-status err" data-fs-error hidden></div>
+
+    <!-- Plain POST is the baseline, so the form works with JavaScript
+         disabled or blocked. The AJAX script below is an enhancement: when it
+         loads, the submission stays on this page instead of bouncing to
+         Formspree's own thank-you screen. -->
+    <form class="form" id="feedback-form" action="https://formspree.io/f/mpqvbelp" method="POST">
+      <input type="hidden" name="_subject" value="Tawn feedback from the website">
+      <!-- Bots fill hidden fields; people do not. Formspree drops anything
+           with this set. -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="gotcha">
+
+      <label for="fb-kind">
+        What kind of note is this?
+        <select id="fb-kind" name="kind" data-fs-field>
+          <option>Something is broken</option>
+          <option>I wish it could…</option>
+          <option>I could not get it working</option>
+          <option>Question</option>
+          <option>Other</option>
+        </select>
+      </label>
+
+      <label for="fb-message">
+        Your message
+        <textarea id="fb-message" name="message" required data-fs-field
+                  placeholder="What happened, or what you were hoping for."></textarea>
+        <span class="field-error" data-fs-error="message"></span>
+      </label>
+
+      <label for="fb-email">
+        Email <span class="optional">— only if you want a reply</span>
+        <input type="email" id="fb-email" name="email" data-fs-field placeholder="you@example.com">
+        <span class="field-error" data-fs-error="email"></span>
+      </label>
+
+      <div>
+        <button class="btn btn-primary" type="submit" data-fs-submit-btn>Send feedback</button>
+      </div>
+
+      <p class="form-note">
+        No account, no tracking. If you would rather not use a form,
+        <a href="https://github.com/tawn-hq/tawn/issues">open an issue</a>
+        or email <a href="mailto:testimonyadekoya.02@gmail.com">testimonyadekoya.02@gmail.com</a>.
+      </p>
+    </form>
+
+    <script>
+      window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+      formspree('initForm', { formElement: '#feedback-form', formId: 'mpqvbelp' });
+    </script>
+    <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="/" style="margin-bottom:.6rem" aria-label="Tawn — home">
+        <svg class="mark" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true">
+          <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+          <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+          <ellipse cx="128" cy="108" rx="27" ry="17" fill="var(--lapis)"/>
+        </svg>
+        <span class="brand-word" style="font-size:1rem">taw<b>n</b></span>
+      </a>
+      <p class="foot-mono" style="margin:0">
+        A cairn marks the path for whoever comes next.
+      </p>
+    </div>
+    <div>
+      <a href="docs.html">Docs</a> ·
+      <a href="contribute.html">Contribute</a> ·
+      <a href="https://github.com/tawn-hq/tawn">Source</a> ·
+      <a href="https://pypi.org/project/tawn/">PyPI</a> ·
+      <a href="#feedback">Feedback</a>
+    </div>
+    <div class="foot-mono">MIT licensed · built in the open</div>
+  </div>
+</footer>
+
+<style>
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+</style>
+</body>
+</html>

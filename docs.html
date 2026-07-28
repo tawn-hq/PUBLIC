@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>documentation — tawn</title>
+
+<meta name="description" content="The Tawn manual, in five parts: understand what it is, set it up, use it, control what it can see, and look things up. Written for people who are not developers, with every term explained.">
+<link rel="canonical" href="https://tawn-hq.github.io/PUBLIC/docs.html">
+<meta name="robots" content="index, follow, max-snippet:-1">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Tawn">
+<meta property="og:title" content="Tawn documentation — from nothing to working">
+<meta property="og:description" content="Install and use Tawn, explained in plain language. No prior experience assumed.">
+<meta property="og:url" content="https://tawn-hq.github.io/PUBLIC/docs.html">
+<meta property="og:image" content="https://tawn-hq.github.io/PUBLIC/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#FAF7F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191510" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=jetbrains-mono@400&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@600,700&f[]=jetbrains-mono@400&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Tawn documentation — from nothing to working",
+      "description": "The Tawn manual in five parts, written for people who are not developers.",
+      "url": "https://tawn-hq.github.io/PUBLIC/docs.html",
+      "inLanguage": "en",
+      "proficiencyLevel": "Beginner",
+      "about": { "@type": "SoftwareApplication", "name": "Tawn" }
+    },
+    {
+      "@type": "HowTo",
+      "name": "Install Tawn",
+      "description": "Install Tawn and build your first memory.",
+      "totalTime": "PT20M",
+      "supply": [
+        { "@type": "HowToSupply", "name": "Python 3.12 or newer" },
+        { "@type": "HowToSupply", "name": "PostgreSQL 14+ with pgvector" }
+      ],
+      "step": [
+        { "@type": "HowToStep", "name": "Install PostgreSQL", "text": "Install PostgreSQL and the pgvector extension using your system's package manager.", "url": "https://tawn-hq.github.io/PUBLIC/docs.html#s-postgres" },
+        { "@type": "HowToStep", "name": "Install Tawn", "text": "Run pipx install tawn, which keeps Tawn isolated from other Python programs.", "url": "https://tawn-hq.github.io/PUBLIC/docs.html#s-tawn" },
+        { "@type": "HowToStep", "name": "Run the setup wizard", "text": "Run tawn setup. It creates the home folder, the database, and picks a model.", "url": "https://tawn-hq.github.io/PUBLIC/docs.html#s-wizard" },
+        { "@type": "HowToStep", "name": "Grant access", "text": "Edit grants.yaml to list the folders Tawn may read, then run tawn grant confirm.", "url": "https://tawn-hq.github.io/PUBLIC/docs.html#s-grant" },
+        { "@type": "HowToStep", "name": "Build the memory", "text": "Run tawn compile, then tawn enrich.", "url": "https://tawn-hq.github.io/PUBLIC/docs.html#s-compile" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Tawn — home">
+      <svg class="mark" width="22" height="22" viewBox="0 0 256 256" aria-hidden="true">
+        <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+        <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+        <ellipse cx="128" cy="108" rx="27" ry="17" fill="var(--lapis)"/>
+      </svg>
+      <span class="brand-word">taw<b>n</b></span>
+    </a>
+    <nav>
+      <a class="nav-wide" href="index.html">Home</a>
+      <a href="docs.html" aria-current="page">Docs</a>
+      <a class="nav-wide" href="contribute.html">Contribute</a>
+      <a href="https://github.com/tawn-hq/tawn">GitHub&nbsp;↗</a>
+    </nav>
+  </div>
+</header>
+
+<div class="docs-shell wrap">
+
+<aside class="toc" aria-label="Contents">
+  <p class="toc-title">The manual</p>
+  <nav>
+    <p class="toc-part">One — Understand</p>
+    <ul>
+      <li><a href="#what">What Tawn is</a></li>
+      <li><a href="#not">What it is not</a></li>
+    </ul>
+    <p class="toc-part">Two — Set up</p>
+    <ul>
+      <li><a href="#need">Before you begin</a></li>
+      <li><a href="#walkthrough">The five steps</a></li>
+      <li><a href="#verify">Check it worked</a></li>
+    </ul>
+    <p class="toc-part">Three — Use</p>
+    <ul>
+      <li><a href="#daily">Day to day</a></li>
+      <li><a href="#agents">Connect your assistants</a></li>
+      <li><a href="#parts">The parts explained</a></li>
+    </ul>
+    <p class="toc-part">Four — Control</p>
+    <ul>
+      <li><a href="#privacy">What leaves your machine</a></li>
+      <li><a href="#storage">Where things are kept</a></li>
+    </ul>
+    <p class="toc-part">Five — Reference</p>
+    <ul>
+      <li><a href="#commands">Every command</a></li>
+      <li><a href="#trouble">Troubleshooting</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<main class="doc">
+
+<h1>The Tawn manual</h1>
+<p class="doc-lede">
+  Five parts: what it is, how to set it up, how to use it, what it can see, and
+  where to look things up. No prior experience assumed — where a step needs a
+  term you may not know, the term is explained where it appears and again in
+  the <a href="#glossary">glossary</a>.
+</p>
+
+<div class="callout">
+  <strong>Honest about where this is.</strong> Tawn is a command-line tool with
+  a local web interface. You will type commands into a terminal; there is no
+  installer you double-click yet. If that is a barrier for you,
+  <a href="index.html#feedback">say so</a> — it is exactly the feedback that
+  decides what gets built next.
+</div>
+
+<div class="jump">
+  <span class="jump-label">In a hurry?</span>
+  <a href="#walkthrough">Skip to installing</a>
+  <a href="#commands">Command reference</a>
+  <a href="#trouble">Something is broken</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<section class="part" id="part-one">
+  <p class="part-mark"><span>Part one</span></p>
+  <h2 class="part-title">Understand</h2>
+
+  <h3 id="what">What Tawn is</h3>
+  <p>
+    You probably use more than one AI assistant — perhaps Claude Code for
+    refactors, Cursor for editing, ChatGPT for thinking out loud. Each keeps
+    its own memory, and none can see the others.
+  </p>
+  <p>
+    So you explain the same context repeatedly. And when something in your
+    project changed last week, nothing can tell you which assistant changed it.
+  </p>
+  <p>
+    Tawn is a program that runs on your own computer and fixes both. It reads
+    the files you allow it to read, turns them into a memory searchable by
+    meaning, and offers that memory to every assistant you use. While you work,
+    it records what changed and who changed it.
+  </p>
+
+  <div class="flow" role="list">
+    <div class="flow-step" role="listitem">
+      <span class="flow-n">1</span>
+      <div><strong>It reads</strong><p>Only the folders you grant. Notes, documents, code, and the session logs your assistants already write.</p></div>
+    </div>
+    <div class="flow-step" role="listitem">
+      <span class="flow-n">2</span>
+      <div><strong>It organises</strong><p>Into a memory searchable by meaning, filed by area of life, with a map of the people and projects it found.</p></div>
+    </div>
+    <div class="flow-step" role="listitem">
+      <span class="flow-n">3</span>
+      <div><strong>It serves</strong><p>Every assistant reads the same memory, so context you built once is there in all of them.</p></div>
+    </div>
+    <div class="flow-step" role="listitem">
+      <span class="flow-n">4</span>
+      <div><strong>It records</strong><p>What changed, and whether you or a specific assistant changed it.</p></div>
+    </div>
+  </div>
+
+  <h3 id="not">What it is not</h3>
+  <dl class="defs">
+    <dt>Not a replacement for your assistants</dt>
+    <dd>Keep using them. Tawn sits underneath, and is useless without them.</dd>
+    <dt>Not a cloud service</dt>
+    <dd>No account, no server of ours, nothing to sign up for. It runs on your machine.</dd>
+    <dt>Not something that reads everything</dt>
+    <dd>It starts able to read nothing at all, and only ever sees what you explicitly allow.</dd>
+  </dl>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<section class="part" id="part-two">
+  <p class="part-mark"><span>Part two</span></p>
+  <h2 class="part-title">Set up</h2>
+  <p class="part-lede">About twenty minutes, most of it waiting for downloads.</p>
+
+  <h3 id="need">Before you begin</h3>
+  <p>Two things Tawn cannot install for you, because they need administrator rights:</p>
+
+  <table class="grid">
+    <thead><tr><th>What</th><th>Why you need it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Python 3.12+</strong></td><td>The language Tawn is written in. Check with <code>python3 --version</code>.</td></tr>
+      <tr><td><strong>PostgreSQL 14+</strong><br><span class="dim">with pgvector</span></td><td>Where your memory lives, on your machine. pgvector is the part that makes searching by meaning possible.</td></tr>
+    </tbody>
+  </table>
+
+  <details class="aside">
+    <summary>New to terminals? Start here.</summary>
+    <p>
+      A terminal is a window where you type commands instead of clicking.
+    </p>
+    <ul class="plain">
+      <li><strong>Windows</strong> — press Start, type <em>PowerShell</em>, Enter.</li>
+      <li><strong>macOS</strong> — press ⌘ Space, type <em>Terminal</em>, Enter.</li>
+      <li><strong>Linux</strong> — Ctrl + Alt + T on most systems.</li>
+    </ul>
+    <p>
+      Commands below start with <code>$</code>. That is the prompt your terminal
+      already prints — type everything after it, not the <code>$</code> itself.
+    </p>
+  </details>
+
+  <h3 id="walkthrough">The five steps</h3>
+
+  <!-- step 1 -->
+  <article class="stepblock" id="s-postgres">
+    <header><span class="step-n">1</span><h4>Install PostgreSQL <span class="tagline">needs sudo</span></h4></header>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">Debian / Ubuntu</span></div>
+      <div class="term-plain"><pre><code><span class="p">$</span> sudo apt install -y postgresql postgresql-16-pgvector
+<span class="p">$</span> sudo systemctl enable --now postgresql</code></pre></div>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">macOS</span></div>
+      <div class="term-plain"><pre><code><span class="p">$</span> brew install postgresql@16 pgvector
+<span class="p">$</span> brew services start postgresql@16</code></pre></div>
+    </div>
+    <p>
+      <strong>Windows:</strong> download the installer from
+      <a href="https://www.postgresql.org/download/windows/">postgresql.org</a>.
+      It asks you to set a password for the <code>postgres</code> user — write
+      it down. Add pgvector afterwards with Stack Builder, bundled with the
+      installer.
+    </p>
+    <div class="callout warn">
+      Install <strong>pgvector</strong> at the same time. Without it Tawn runs
+      but search falls back to matching keywords instead of understanding
+      meaning — the kind of quiet downgrade you would not otherwise notice.
+    </div>
+  </article>
+
+  <!-- step 2 -->
+  <article class="stepblock" id="s-tawn">
+    <header><span class="step-n">2</span><h4>Install Tawn</h4></header>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+      <div class="term-plain"><pre><code><span class="p">$</span> pipx install tawn</code></pre></div>
+    </div>
+    <details class="aside">
+      <summary>Do not have <code>pipx</code>?</summary>
+      <div class="term">
+        <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+        <div class="term-plain"><pre><code><span class="c"># Debian / Ubuntu</span>
+<span class="p">$</span> sudo apt install -y pipx && pipx ensurepath
+
+<span class="c"># macOS</span>
+<span class="p">$</span> brew install pipx && pipx ensurepath
+
+<span class="c"># Windows (PowerShell)</span>
+<span class="p">$</span> py -m pip install --user pipx
+<span class="p">$</span> py -m pipx ensurepath</code></pre></div>
+      </div>
+      <p>Close the terminal and open a new one afterwards, so the change takes effect.</p>
+    </details>
+    <p class="check"><strong>Check:</strong> <code>tawn --help</code> prints a list of commands.</p>
+  </article>
+
+  <!-- step 3 -->
+  <article class="stepblock" id="s-wizard">
+    <header><span class="step-n">3</span><h4>Run the setup wizard</h4></header>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+      <div class="term-plain"><pre><code><span class="p">$</span> tawn setup</code></pre></div>
+    </div>
+    <p>Four questions. Pressing Enter accepts every default.</p>
+    <table class="grid tight">
+      <tbody>
+        <tr><td><strong>Home folder</strong></td><td>Creates <code>~/.tawn/</code>, where everything Tawn owns lives.</td></tr>
+        <tr><td><strong>Database</strong></td><td>Creates the database and switches on pgvector.</td></tr>
+        <tr><td><strong>A model</strong></td><td>Offers local models sized to your computer's memory.</td></tr>
+        <tr><td><strong>Cloud keys</strong></td><td>Optional. Stored in your operating system's password manager, never in a file.</td></tr>
+      </tbody>
+    </table>
+    <p class="check"><strong>Check:</strong> during the database step you should see <code>pgvector enabled — semantic search available</code>.</p>
+  </article>
+
+  <!-- step 4 -->
+  <article class="stepblock" id="s-grant">
+    <header><span class="step-n">4</span><h4>Say what it may read</h4></header>
+    <p>
+      Tawn begins able to read nothing. That is deliberate. Open
+      <code>~/.tawn/grants.yaml</code> and list what it may see:
+    </p>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">~/.tawn/grants.yaml</span></div>
+      <div class="term-plain"><pre><code>read:
+  - ~/Documents/notes
+  - ~/code/my-project
+
+write:
+  - ~/Documents/tawn-reviews
+
+net: false      <span class="c"># may tools reach the internet</span>
+shell: false    <span class="c"># may tools run commands</span></code></pre></div>
+    </div>
+    <p>
+      <code>read:</code> is what it may look at. <code>write:</code> is the only
+      place it may ever put files. Then confirm the change — Tawn keeps a
+      fingerprint of this file and will not act on an edit it was not told
+      about:
+    </p>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+      <div class="term-plain"><pre><code><span class="p">$</span> tawn grant confirm</code></pre></div>
+    </div>
+    <p class="check"><strong>Check:</strong> <code>tawn grant list</code> shows the folders you added.</p>
+  </article>
+
+  <!-- step 5 -->
+  <article class="stepblock" id="s-compile">
+    <header><span class="step-n">5</span><h4>Build the memory</h4></header>
+    <div class="term">
+      <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+      <div class="term-plain"><pre><code><span class="p">$</span> tawn compile     <span class="c"># makes it searchable</span>
+<span class="p">$</span> tawn enrich      <span class="c"># makes it readable</span>
+<span class="p">$</span> tawn web start   <span class="c"># opens the interface</span></code></pre></div>
+    </div>
+    <p>
+      <strong>Compile</strong> reads your granted folders, discards noise like
+      build output, and indexes everything by meaning. The first run takes a
+      while; later runs only process what changed.
+    </p>
+    <p>
+      <strong>Enrich</strong> adds titles, summaries and the map of people and
+      projects. You can stop it and run it again later — it resumes where it
+      left off.
+    </p>
+    <p class="check"><strong>Check:</strong> open <code>http://127.0.0.1:8787</code>. That address is your own computer talking to itself; nobody else can reach it.</p>
+  </article>
+
+  <h3 id="verify">Check it worked</h3>
+  <div class="term">
+    <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+    <div class="term-plain"><pre><code><span class="p">$</span> tawn doctor</code></pre></div>
+  </div>
+  <p>
+    Every line should read <code>[ok]</code>. If one does not, it names the
+    unhappy part. This is the command to run whenever anything feels wrong.
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<section class="part" id="part-three">
+  <p class="part-mark"><span>Part three</span></p>
+  <h2 class="part-title">Use</h2>
+
+  <h3 id="daily">Day to day</h3>
+  <p>
+    Once the interface is running, compiling and enriching happen automatically
+    every thirty minutes, so in practice you rarely type them again.
+  </p>
+  <table class="grid">
+    <thead><tr><th>To…</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td>Ask your memory a question</td><td><code>tawn recall "what did I decide about pricing"</code></td></tr>
+      <tr><td>Tell it something directly</td><td><code>tawn note "Chose Postgres — no ops burden."</code></td></tr>
+      <tr><td>Summarise an area</td><td><code>tawn brief work</code></td></tr>
+      <tr><td>Have a conversation</td><td><code>tawn chat</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>It searches meaning, not words.</strong> Ask “what did I decide
+    about storing data” and it finds a note saying “went with Postgres”, even
+    though no word matches.
+  </div>
+
+  <h3 id="agents">Connect your assistants</h3>
+  <p>
+    This is the part that makes Tawn worth having. Assistants speak a shared
+    protocol called <strong>MCP</strong>; Tawn speaks it too. For Claude Code,
+    open <code>~/.claude.json</code> and add:
+  </p>
+  <div class="term">
+    <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">~/.claude.json</span></div>
+    <div class="term-plain"><pre><code>{
+  "mcpServers": {
+    "tawn": { "command": "tawn", "args": ["mcp"] }
+  }
+}</code></pre></div>
+  </div>
+  <p>
+    Restart the assistant. It can now search your memory, add to it, and
+    summarise any area — the same memory every other connected assistant sees.
+    Cursor, Gemini CLI and Codex use the same idea in their own settings file.
+  </p>
+  <p>Tawn can also find the assistants already on your machine:</p>
+  <div class="term">
+    <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">terminal</span></div>
+    <div class="term-plain"><pre><code><span class="p">$</span> tawn mcp adopt</code></pre></div>
+  </div>
+  <p>
+    Anything it finds is added switched <strong>off</strong>. Finding something
+    is not the same as agreeing to run it.
+  </p>
+
+  <h3 id="parts">The parts explained</h3>
+  <dl class="defs">
+    <dt>Memory</dt>
+    <dd>Everything Tawn has read — one card per document or conversation, not one per fragment. Opening a card reassembles the whole document.</dd>
+    <dt>Notes</dt>
+    <dd>Things you told it deliberately rather than things it gathered. Yours to edit or delete at any time.</dd>
+    <dt>Wiki</dt>
+    <dd>The people, projects and tools it found, and how they connect. Ordinary markdown, so it opens as an Obsidian vault if you use one.</dd>
+    <dt>Activity</dt>
+    <dd>What Tawn did and what it cost. Calls it cannot price are shown as unpriced rather than quietly counted as free.</dd>
+    <dt>Tools</dt>
+    <dd>What your twin can do — read files, search the web, research, draw diagrams — plus any assistant servers you connected. Each needs permission before it is offered.</dd>
+    <dt>Observer</dt>
+    <dd>Optional. Watches granted projects, records what changed and who changed it, and writes a short review when you stop. Off until you turn it on.</dd>
+  </dl>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<section class="part" id="part-four">
+  <p class="part-mark"><span>Part four</span></p>
+  <h2 class="part-title">Control</h2>
+
+  <h3 id="privacy">What leaves your machine</h3>
+  <p>Local models handle everything by default. Two things can send data outward, both off:</p>
+  <table class="grid">
+    <thead><tr><th>Setting</th><th>What it sends</th></tr></thead>
+    <tbody>
+      <tr><td><code>tawn enrich --cloud</code></td><td>The text of your documents, to a cloud model, to summarise.</td></tr>
+      <tr><td><code>embed_allow_cloud: true</code></td><td>Your <em>entire</em> collection, for indexing. Called out separately because that is a different kind of exposure from one message.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Tawn will not quietly fall back to a paid service. If no local model is
+    available it stops and says so.
+  </p>
+  <div class="callout warn">
+    <strong>One thing to know.</strong> The web interface has no password. It is
+    reachable only from your own computer, and Tawn refuses to expose it to the
+    internet. Sharing with other people is being built, and arrives together
+    with proper sign-in.
+  </div>
+
+  <h3 id="storage">Where things are kept</h3>
+  <div class="term">
+    <div class="term-bar"><span class="tl"></span><span class="tl"></span><span class="tl"></span><span class="term-title">~/.tawn/</span></div>
+    <div class="term-plain"><pre><code>raw/          your notes and imported sources
+wiki/         the map it built
+skills/       instructions you wrote
+artifacts/    diagrams and briefings, every version kept
+grants.yaml   what it may read and write
+audit.jsonl   every access, chained
+ledger.jsonl  every model call and its cost</code></pre></div>
+  </div>
+  <p>
+    Every file Tawn reads is written to a log chained together
+    cryptographically — if an entry were altered or removed, checking the chain
+    says exactly where it breaks. All of it is plain text you can read, search,
+    back up or delete without Tawn's help. That is the point of keeping it
+    local.
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<section class="part" id="part-five">
+  <p class="part-mark"><span>Part five</span></p>
+  <h2 class="part-title">Reference</h2>
+
+  <h3 id="commands">Every command</h3>
+  <table class="grid">
+    <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>tawn setup</code></td><td>The first-run wizard.</td></tr>
+      <tr><td><code>tawn doctor</code></td><td>Checks every part and names anything unhealthy.</td></tr>
+      <tr><td><code>tawn grant list</code></td><td>Shows what it may read and write.</td></tr>
+      <tr><td><code>tawn grant confirm</code></td><td>Acknowledges an edit to <code>grants.yaml</code>.</td></tr>
+      <tr><td><code>tawn compile</code></td><td>Reads granted folders and makes them searchable.</td></tr>
+      <tr><td><code>tawn enrich</code></td><td>Adds titles, summaries and the entity map.</td></tr>
+      <tr><td><code>tawn recall "…"</code></td><td>Searches your memory by meaning.</td></tr>
+      <tr><td><code>tawn note "…"</code></td><td>Records something deliberately.</td></tr>
+      <tr><td><code>tawn brief &lt;area&gt;</code></td><td>Summarises what is happening in a domain.</td></tr>
+      <tr><td><code>tawn chat</code></td><td>A conversation with your memory as context.</td></tr>
+      <tr><td><code>tawn wiki</code></td><td>Browses the map it built.</td></tr>
+      <tr><td><code>tawn ledger</code></td><td>Every model call and its cost.</td></tr>
+      <tr><td><code>tawn web start</code> / <code>stop</code></td><td>Runs the local interface.</td></tr>
+      <tr><td><code>tawn mcp adopt</code></td><td>Finds assistants already configured on this machine.</td></tr>
+      <tr><td><code>tawn skill sync</code></td><td>Copies your skills into every assistant.</td></tr>
+      <tr><td><code>tawn observe status</code></td><td>Whether the work recorder is on, and what is pending.</td></tr>
+      <tr><td><code>tawn update</code></td><td>Upgrades Tawn itself.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="trouble">Troubleshooting</h3>
+  <dl class="defs">
+    <dt>“Database is unreachable”</dt>
+    <dd>PostgreSQL is not running. <code>sudo systemctl start postgresql</code> on Linux, <code>brew services start postgresql@16</code> on macOS, or the <em>postgresql</em> service in Windows Services.</dd>
+    <dt>Search results feel shallow</dt>
+    <dd>pgvector is probably off, so search is matching keywords. Run <code>tawn db setup</code> and look for the pgvector line.</dd>
+    <dt>Cards show filenames instead of titles</dt>
+    <dd>Enrichment has not reached them. Run <code>tawn enrich</code>, or wait for the automatic pass.</dd>
+    <dt>A scanned PDF comes back empty</dt>
+    <dd>Reading scans needs Tesseract: <code>sudo apt install tesseract-ocr</code>, then <code>pipx inject tawn pytesseract Pillow pymupdf</code>.</dd>
+    <dt>A change had no effect</dt>
+    <dd>A running server keeps the version it started with. <code>tawn web stop &amp;&amp; tawn web start</code>.</dd>
+    <dt>Something else</dt>
+    <dd>Run <code>tawn doctor</code> first. If that does not explain it, <a href="index.html#feedback">tell us</a>.</dd>
+  </dl>
+
+  <h3 id="glossary">Glossary</h3>
+  <dl class="defs cols">
+    <dt>Terminal</dt><dd>A window where you type commands instead of clicking. Also called a command line, shell, or PowerShell.</dd>
+    <dt>Command</dt><dd>A line you type into a terminal. Shown here starting with <code>$</code>, which your terminal already prints.</dd>
+    <dt>PostgreSQL</dt><dd>A database — software that stores information in an organised way. Runs on your machine.</dd>
+    <dt>pgvector</dt><dd>An addition to PostgreSQL that lets it compare meanings rather than exact words.</dd>
+    <dt>Compile</dt><dd>Reading your files and making them searchable. Nothing to do with programming languages here.</dd>
+    <dt>Enrich</dt><dd>A second pass adding titles, summaries and connections, so memory is pleasant to read.</dd>
+    <dt>Grant</dt><dd>Permission you give Tawn to read or write a specific folder. Without one it can do neither.</dd>
+    <dt>MCP</dt><dd>Model Context Protocol — the shared language assistants use to talk to outside tools.</dd>
+    <dt>Model</dt><dd>The AI itself. Local ones run on your machine for free; cloud ones you pay for.</dd>
+    <dt>Domain</dt><dd>An area of life memory is filed under: work, wealth, research, academic, hobby.</dd>
+    <dt>Audit log</dt><dd>A record of every file Tawn read, chained so tampering is detectable.</dd>
+    <dt>Ledger</dt><dd>A record of every AI call and what it cost.</dd>
+    <dt>Attribution</dt><dd>Working out who made a change — you, or which assistant. Marked “likely” when inferred rather than known.</dd>
+  </dl>
+</section>
+
+<div class="callout">
+  <strong>Was anything here unclear?</strong>
+  <a href="index.html#feedback">Tell us</a> — including “this lost me at step
+  three”. That is genuinely useful.
+</div>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="index.html" style="margin-bottom:.6rem" aria-label="Tawn — home">
+        <svg class="mark" width="18" height="18" viewBox="0 0 256 256" aria-hidden="true">
+          <ellipse cx="128" cy="192" rx="62" ry="24" fill="currentColor"/>
+          <ellipse cx="128" cy="148" rx="45" ry="21" fill="currentColor"/>
+          <ellipse cx="128" cy="108" rx="27" ry="17" fill="var(--lapis)"/>
+        </svg>
+        <span class="brand-word" style="font-size:1rem">taw<b>n</b></span>
+      </a>
+      <p class="foot-mono" style="margin:0">A cairn marks the path for whoever comes next.</p>
+    </div>
+    <div>
+      <a href="index.html">Home</a> ·
+      <a href="docs.html">Docs</a> ·
+      <a href="contribute.html">Contribute</a> ·
+      <a href="https://github.com/tawn-hq/tawn">Source</a> ·
+      <a href="index.html#feedback">Feedback</a>
+    </div>
+    <div class="foot-mono">MIT licensed · built in the open</div>
+  </div>
+</footer>
+
+</body>
+</html>

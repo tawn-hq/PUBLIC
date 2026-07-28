@@ -1,0 +1,606 @@
+/* Tawn — public site
+ *
+ * Palette and mark come from the product's own design tokens: Sandstone &
+ * Lapis, the CAIRN mark. The story behind them is the story of the product —
+ * humanity's first permanent records were marks on sandstone written in lapis,
+ * and a cairn is what one traveller leaves so the next can find the path.
+ *
+ * Lapis is scarce by rule here, exactly as it is in the app: the capstone, the
+ * primary action, the focused thing. Never decoration, never a status colour.
+ */
+
+:root {
+  /* ground — warm mineral neutrals */
+  --bg: #FAF7F1;
+  --surface: #FFFFFF;
+  --raised: #F3EEE3;
+  --line: #E7E0D2;
+  --line-strong: #D5CCB8;
+
+  /* ink */
+  --ink: #33291C;
+  --ink-2: #6B5F4B;
+  --ink-3: #948A76;
+
+  /* the one accent */
+  --lapis: #2E5FA3;
+  --lapis-bright: #4A7BC8;
+  --lapis-deep: #234A80;
+  --lapis-soft: #E5ECF6;
+
+  /* night — used once, for the ledger */
+  --night: #191510;
+  --night-raised: #241E16;
+  --night-line: #3A3126;
+  --night-text: #EDE6D8;
+  --night-text-2: #9C907B;
+
+  /* domains — tags only, never flood */
+  --work: #9C5B33;
+  --wealth: #3F8E62;
+  --research: #8A63D2;
+  --academic: #C2536B;
+
+  --good: #3F8E62;
+  --warn: #B9741F;
+
+  --display: "General Sans", "Segoe UI Variable Display", ui-sans-serif, system-ui, sans-serif;
+  --body: "Instrument Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+
+  --measure: 34rem;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --rule: 1px solid var(--line);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--display); font-weight: 620; letter-spacing: -0.021em; text-wrap: balance; margin: 0; }
+p { margin: 0 0 1.1em; max-width: var(--measure); }
+a { color: var(--lapis); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--lapis-deep); }
+code, kbd { font-family: var(--mono); font-size: 0.88em; }
+
+:focus-visible {
+  outline: 2px solid var(--lapis);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.wrap { max-width: 68rem; margin: 0 auto; padding-inline: var(--gutter); }
+
+/* ── the marker rail ───────────────────────────────────────────────────────
+   Sections are marked by a cairn that gains a stone each time. The mark is
+   the product's own, and accumulation is literally what the product does —
+   so the device carries meaning rather than ornament. Numbered eyebrows
+   would have said "these are steps", which they are not.                    */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.1rem;
+}
+.eyebrow svg { flex: none; }
+
+/* ── header ─────────────────────────────────────────────────────────────── */
+
+.masthead {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: var(--rule);
+}
+.masthead > .wrap {
+  display: flex; align-items: center; gap: 1.5rem;
+  height: 60px;
+}
+.brand { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; color: var(--ink); }
+.brand .mark { flex: none; }
+.brand-word {
+  font-family: var(--display); font-weight: 700; font-size: 1.24rem;
+  letter-spacing: -0.03em; color: var(--ink);
+}
+.brand-word b { color: var(--lapis); font-weight: 700; }
+.masthead nav {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 0.15rem;
+}
+.masthead nav a {
+  font-size: 0.92rem; color: var(--ink-2); text-decoration: none;
+  padding: 0.42rem 0.75rem; border-radius: 7px;
+  white-space: nowrap;
+  transition: background 0.14s, color 0.14s;
+}
+.masthead nav a:hover { color: var(--ink); background: var(--raised); }
+/* The page you are on should be obvious without reading the URL. */
+.masthead nav a[aria-current="page"] {
+  color: var(--lapis); font-weight: 600; background: var(--lapis-soft);
+}
+.masthead nav a[href^="http"] { color: var(--ink-3); }
+.masthead nav a[href^="http"]:hover { color: var(--ink); }
+
+/* Below 44rem the anchor links are dropped rather than crammed: on a phone
+   the page is short enough to scroll, and a hamburger for four links is
+   more machinery than the problem deserves. Docs and GitHub always stay. */
+@media (max-width: 44rem) {
+  .nav-wide { display: none; }
+  .masthead nav a { padding: 0.42rem 0.6rem; font-size: 0.88rem; }
+  .masthead > .wrap { gap: 0.75rem; }
+}
+
+/* ── buttons ────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--body); font-size: 0.95rem; font-weight: 560;
+  padding: 0.62rem 1.15rem; border-radius: 7px;
+  text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  transition: background 0.16s, border-color 0.16s, color 0.16s;
+}
+.btn-primary { background: var(--lapis); color: #fff; }
+.btn-primary:hover { background: var(--lapis-deep); color: #fff; }
+.btn-ghost { border-color: var(--line-strong); color: var(--ink); background: var(--surface); }
+.btn-ghost:hover { border-color: var(--ink-3); color: var(--ink); }
+
+/* ── hero ───────────────────────────────────────────────────────────────── */
+
+.hero { padding: clamp(3.5rem, 9vw, 6.5rem) 0 clamp(2.5rem, 6vw, 4rem); }
+.hero h1 {
+  font-size: clamp(2.3rem, 6.2vw, 4rem);
+  line-height: 1.04;
+  margin-bottom: 1.3rem;
+  max-width: 20ch;
+}
+.hero h1 em { font-style: normal; color: var(--lapis); }
+.hero .lede { font-size: clamp(1.06rem, 1.9vw, 1.22rem); color: var(--ink-2); max-width: 48ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.9rem; align-items: center; }
+.hero-note { font-family: var(--mono); font-size: 0.78rem; color: var(--ink-3); }
+
+/* ── the ledger: the one dark object on the page ────────────────────────── */
+
+.ledger {
+  margin-top: clamp(2.5rem, 6vw, 3.75rem);
+  background: var(--night);
+  border-radius: 12px;
+  border: 1px solid var(--night-line);
+  overflow: hidden;
+  box-shadow: 0 24px 60px -28px rgba(25, 21, 16, 0.55);
+}
+.ledger-bar {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  border-bottom: 1px solid var(--night-line);
+  font-family: var(--mono); font-size: 0.74rem; color: var(--night-text-2);
+}
+.ledger-bar .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); flex: none; }
+.ledger-body { padding: 0.55rem 0 0.9rem; overflow-x: auto; }
+.ledger table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.79rem; min-width: 34rem; }
+.ledger td { padding: 0.42rem 1.1rem; color: var(--night-text); white-space: nowrap; }
+.ledger tr + tr td { border-top: 1px solid color-mix(in srgb, var(--night-line) 55%, transparent); }
+.ledger .t { color: var(--night-text-2); }
+.ledger .num { color: var(--night-text-2); font-variant-numeric: tabular-nums; }
+.ledger .add { color: var(--good); }
+.ledger .del { color: #C2536B; }
+.who { display: inline-flex; align-items: center; gap: 0.4rem; }
+.who .pip { width: 6px; height: 6px; border-radius: 2px; flex: none; }
+.who.agent .pip { background: var(--lapis-bright); }
+.who.you   .pip { background: var(--night-text-2); }
+.who.maybe .pip { background: var(--warn); }
+.who.maybe { color: var(--night-text-2); font-style: italic; }
+.ledger-foot {
+  padding: 0.75rem 1.1rem; border-top: 1px solid var(--night-line);
+  font-family: var(--mono); font-size: 0.73rem; color: var(--night-text-2);
+  display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem;
+}
+.ledger-caption {
+  font-family: var(--mono); font-size: 0.76rem; color: var(--ink-3);
+  margin-top: 0.85rem; max-width: 60ch;
+}
+
+/* ── sections ───────────────────────────────────────────────────────────── */
+
+.band { padding: clamp(3.25rem, 8vw, 5.5rem) 0; border-top: var(--rule); }
+.band h2 { font-size: clamp(1.65rem, 3.4vw, 2.3rem); line-height: 1.14; margin-bottom: 1rem; max-width: 22ch; }
+.band .sub { color: var(--ink-2); max-width: 52ch; }
+
+.split { display: grid; gap: clamp(1.75rem, 4vw, 3.5rem); }
+@media (min-width: 56rem) { .split { grid-template-columns: 1fr 1fr; align-items: start; } }
+
+/* the problem: agents side by side, each sealed */
+.silos { display: grid; gap: 0.7rem; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+.silo {
+  border: 1px dashed var(--line-strong);
+  border-radius: 9px;
+  padding: 0.95rem 1rem;
+  background: var(--surface);
+}
+.silo h3 { font-size: 0.94rem; font-weight: 600; margin-bottom: 0.3rem; }
+.silo p { font-size: 0.85rem; color: var(--ink-3); margin: 0; font-family: var(--mono); }
+
+/* what it does — a plain list, no cards */
+.rows { border-top: var(--rule); margin-top: 1.5rem; }
+.row { display: grid; gap: 0.3rem 1.5rem; padding: 1.25rem 0; border-bottom: var(--rule); }
+@media (min-width: 46rem) { .row { grid-template-columns: 13rem 1fr; } }
+.row h3 { font-size: 1rem; font-weight: 620; }
+.row p { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+.row code { background: var(--raised); padding: 0.1em 0.4em; border-radius: 4px; }
+
+/* domains */
+.tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.2rem; }
+.tag {
+  font-family: var(--mono); font-size: 0.76rem;
+  padding: 0.24rem 0.6rem; border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.tag.work { color: var(--work); }
+.tag.wealth { color: var(--wealth); }
+.tag.research { color: var(--research); }
+.tag.academic { color: var(--academic); }
+.tag.hobby { color: var(--ink-3); }
+
+/* install */
+/* The install block is a real terminal, so it is built from <pre> — a <div>
+   collapses whitespace and turned four commands into one run-on line. The
+   steps are numbered because installing genuinely is a sequence: each one
+   depends on the last. */
+.term {
+  background: var(--night);
+  color: var(--night-text);
+  border-radius: 11px;
+  border: 1px solid var(--night-line);
+  overflow: hidden;
+}
+.term-bar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--night-line);
+}
+.term-bar .tl { width: 9px; height: 9px; border-radius: 50%; background: var(--night-line); flex: none; }
+.term-title {
+  margin-left: 0.5rem; font-family: var(--mono);
+  font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--night-text-2);
+}
+
+.steps { list-style: none; counter-reset: step; margin: 0; padding: 0.4rem 0 0.9rem; }
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0.8rem 1.1rem 0.8rem 2.9rem;
+}
+.steps li + li { border-top: 1px solid color-mix(in srgb, var(--night-line) 55%, transparent); }
+.steps li::before {
+  content: counter(step);
+  position: absolute; left: 1.05rem; top: 0.95rem;
+  width: 1.25rem; height: 1.25rem; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--night); background: var(--lapis-bright);
+}
+.step-label {
+  display: block; font-family: var(--body); font-size: 0.86rem;
+  color: var(--night-text-2); margin-bottom: 0.45rem;
+}
+.step-note {
+  display: block; font-family: var(--body); font-size: 0.78rem;
+  color: var(--night-text-2); margin-top: 0.4rem; opacity: 0.8;
+}
+.term pre {
+  margin: 0;
+  font-family: var(--mono); font-size: 0.83rem; line-height: 1.7;
+  white-space: pre; overflow-x: auto;
+  color: var(--night-text);
+}
+.term code { font-size: inherit; color: inherit; background: none; padding: 0; }
+.step-label code {
+  font-size: 0.85em; color: var(--night-text);
+  background: color-mix(in srgb, var(--night-line) 60%, transparent);
+  padding: 0.08em 0.32em; border-radius: 3px;
+}
+.term .p { color: var(--lapis-bright); user-select: none; }
+
+/* faq */
+details {
+  border-bottom: var(--rule);
+  padding: 1.05rem 0;
+}
+details summary {
+  cursor: pointer; font-weight: 600; font-family: var(--display);
+  font-size: 1.02rem; list-style: none; display: flex; gap: 0.8rem; align-items: baseline;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::after {
+  content: "+"; margin-left: auto; color: var(--ink-3);
+  font-family: var(--mono); font-weight: 400;
+}
+details[open] summary::after { content: "–"; }
+details p { margin: 0.7rem 0 0; color: var(--ink-2); font-size: 0.96rem; }
+
+/* feedback */
+.feedback { background: var(--raised); border-top: var(--rule); }
+.form { display: grid; gap: 0.85rem; max-width: 34rem; margin-top: 1.5rem; }
+.form label { display: grid; gap: 0.35rem; font-size: 0.88rem; font-weight: 560; }
+.form input, .form textarea, .form select {
+  font: inherit; font-size: 0.95rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line-strong); border-radius: 7px;
+  background: var(--surface); color: var(--ink);
+  width: 100%;
+}
+.form textarea { min-height: 8rem; resize: vertical; }
+.form-note { font-size: 0.83rem; color: var(--ink-3); max-width: 44ch; }
+
+/* footer */
+footer { border-top: var(--rule); padding: 2.5rem 0 3.5rem; font-size: 0.9rem; color: var(--ink-2); }
+.foot-grid { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; align-items: baseline; }
+footer a { color: var(--ink-2); }
+footer a:hover { color: var(--lapis); }
+.foot-mono { font-family: var(--mono); font-size: 0.76rem; color: var(--ink-3); }
+
+/* ── dark mode ──────────────────────────────────────────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #191510;
+    --surface: #201A13;
+    --raised: #241E16;
+    --line: #3A3126;
+    --line-strong: #4C4235;
+    --ink: #EDE6D8;
+    --ink-2: #B7AB95;
+    --ink-3: #8B806C;
+    --lapis: #6E97D6;
+    --lapis-bright: #6E97D6;
+    --lapis-deep: #8FB0E2;
+    --lapis-soft: #1C2536;
+  }
+  .ledger { box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.8); }
+  .silo { background: var(--surface); }
+  .btn-primary { color: #12100C; }
+  .btn-primary:hover { color: #12100C; }
+}
+
+/* ── documentation pages ──────────────────────────────────────────────────
+   A sidebar of contents beside a single reading column. Long-form technical
+   writing needs a visible map more than a landing page does — the reader
+   arrives looking for one specific thing, not to be walked through.        */
+
+.docs-shell { display: block; padding-top: 2.5rem; padding-bottom: 4rem; }
+@media (min-width: 62rem) {
+  .docs-shell { display: grid; grid-template-columns: 14rem 1fr; gap: 3.5rem; align-items: start; }
+}
+
+.toc { display: none; }
+@media (min-width: 62rem) {
+  .toc { display: block; position: sticky; top: 5rem; }
+}
+.toc-title {
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--ink-3); margin: 0 0 0.7rem;
+}
+
+
+.doc { min-width: 0; max-width: 44rem; }
+.doc h1 { font-size: clamp(2rem, 4.6vw, 2.7rem); margin-bottom: 0.7rem; }
+.doc-lede { font-size: 1.08rem; color: var(--ink-2); max-width: 46ch; margin-bottom: 2.2rem; }
+.doc h2 {
+  font-size: clamp(1.4rem, 2.8vw, 1.75rem);
+  margin: 3.2rem 0 1rem; padding-top: 1.6rem;
+  border-top: var(--rule);
+  scroll-margin-top: 5rem;
+}
+.doc h3 { font-size: 1.08rem; margin: 2rem 0 0.7rem; }
+.doc p { max-width: 46rem; }
+
+.tagline {
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--warn); border: 1px solid currentColor;
+  border-radius: 999px; padding: 0.1rem 0.5rem; vertical-align: 0.18em;
+}
+
+ul.plain, ol.plain-ol { max-width: 46rem; padding-left: 1.2rem; margin: 0 0 1.2rem; }
+ul.plain li, ol.plain-ol li { margin-bottom: 0.5rem; }
+
+.grid { width: 100%; border-collapse: collapse; margin: 1.2rem 0 1.6rem; font-size: 0.94rem; }
+.grid th, .grid td { text-align: left; padding: 0.6rem 0.9rem 0.6rem 0; border-bottom: var(--rule); vertical-align: top; }
+.grid th {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3); font-weight: 400;
+}
+.grid td:first-child { padding-right: 1.4rem; }
+
+.defs { margin: 1.2rem 0 1.6rem; max-width: 46rem; }
+.defs dt { font-weight: 620; font-family: var(--display); margin-top: 1.1rem; }
+.defs dd { margin: 0.25rem 0 0; color: var(--ink-2); font-size: 0.96rem; }
+
+.callout {
+  border-left: 3px solid var(--lapis);
+  background: var(--raised);
+  padding: 0.95rem 1.1rem;
+  margin: 1.6rem 0;
+  border-radius: 0 7px 7px 0;
+  font-size: 0.95rem;
+  max-width: 46rem;
+}
+.callout.warn { border-left-color: var(--warn); }
+.callout strong { color: var(--ink); }
+
+/* Terminal blocks on the docs pages carry no numbered steps — they are single
+   snippets, so they get the plain body rather than the .steps list. */
+.term-plain { padding: 0.85rem 1.1rem; }
+.doc .term { margin: 1rem 0 1.6rem; }
+.term .c { color: var(--night-text-2); }
+
+
+/* ── manual structure ─────────────────────────────────────────────────────
+   The docs are a manual in five parts, not one long scroll. Parts are the
+   coarse unit a reader navigates by; the numbering is honest because they
+   genuinely run in order — understand, set up, use, control, look up.     */
+
+.part { margin-top: 4.5rem; }
+.part:first-of-type { margin-top: 3rem; }
+.part-mark {
+  display: flex; align-items: center; gap: 0.9rem;
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--lapis); margin: 0 0 0.5rem;
+}
+.part-mark::after {
+  content: ""; flex: 1; height: 1px; background: var(--line);
+}
+.part-title {
+  font-size: clamp(1.75rem, 3.6vw, 2.35rem);
+  margin: 0 0 0.6rem; padding: 0; border: 0;
+  scroll-margin-top: 5rem;
+}
+.part-lede { color: var(--ink-2); margin-bottom: 1.6rem; }
+
+/* h2 inside a part is the part title, so it must not carry the standalone
+   heading rule that .doc h2 sets. */
+.doc .part h2.part-title { border-top: 0; padding-top: 0; margin-top: 0; }
+.doc .part h3 {
+  font-size: 1.22rem; margin: 2.6rem 0 0.9rem;
+  scroll-margin-top: 5rem;
+}
+
+/* quick links under the lede */
+.jump {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem;
+  padding: 0.9rem 0; margin: 1.5rem 0 0;
+  border-top: var(--rule); border-bottom: var(--rule);
+}
+.jump-label {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+}
+.jump a { font-size: 0.9rem; }
+
+/* how it works — four beats, in order */
+.flow { display: grid; gap: 0.6rem; margin: 1.6rem 0 2rem; }
+@media (min-width: 46rem) { .flow { grid-template-columns: 1fr 1fr; } }
+.flow-step {
+  display: flex; gap: 0.8rem; align-items: flex-start;
+  padding: 0.9rem 1rem; border: var(--rule); border-radius: 9px;
+  background: var(--surface);
+}
+.flow-n {
+  flex: none; width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 0.72rem;
+  background: var(--lapis-soft); color: var(--lapis);
+}
+.flow-step strong { display: block; font-size: 0.95rem; margin-bottom: 0.15rem; }
+.flow-step p { margin: 0; font-size: 0.88rem; color: var(--ink-2); max-width: none; }
+
+/* the install walkthrough */
+.stepblock {
+  border-left: 2px solid var(--line);
+  padding: 0 0 0.5rem 1.5rem;
+  margin: 0 0 2.2rem;
+  position: relative;
+  scroll-margin-top: 5rem;
+}
+.stepblock > header { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.9rem; }
+.stepblock h4 { font-family: var(--display); font-size: 1.1rem; font-weight: 620; margin: 0; }
+.step-n {
+  position: absolute; left: -0.85rem;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%;
+  display: grid; place-items: center; flex: none;
+  font-family: var(--mono); font-size: 0.78rem;
+  background: var(--lapis); color: #fff;
+  box-shadow: 0 0 0 5px var(--bg);
+}
+.stepblock > header h4 { margin-left: 1.1rem; }
+.check {
+  font-size: 0.9rem; color: var(--ink-2);
+  border-left: 2px solid var(--good); padding-left: 0.8rem; margin: 0.9rem 0 0;
+}
+.check strong { color: var(--good); }
+
+/* collapsible asides, for detail that would otherwise interrupt */
+details.aside {
+  border: var(--rule); border-radius: 8px;
+  padding: 0.7rem 0.95rem; margin: 1rem 0 1.2rem;
+  background: var(--surface);
+}
+details.aside summary {
+  font-family: var(--body); font-size: 0.92rem; font-weight: 560;
+  color: var(--ink-2);
+}
+details.aside[open] summary { margin-bottom: 0.7rem; color: var(--ink); }
+details.aside summary::after { color: var(--ink-3); }
+details.aside p:last-child { margin-bottom: 0; }
+
+/* nested table of contents */
+.toc-part {
+  font-family: var(--mono); font-size: 0.66rem;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--lapis); margin: 1.15rem 0 0.35rem;
+}
+.toc-part:first-child { margin-top: 0; }
+.toc ul { list-style: none; margin: 0; padding: 0; }
+.toc ul a {
+  display: block; padding: 0.25rem 0 0.25rem 0.85rem;
+  font-size: 0.87rem; color: var(--ink-2); text-decoration: none;
+  border-left: 2px solid var(--line);
+}
+.toc ul a:hover { color: var(--ink); border-left-color: var(--lapis); }
+
+.grid.tight td { padding-top: 0.45rem; padding-bottom: 0.45rem; }
+.grid td:first-child { white-space: nowrap; }
+.dim { color: var(--ink-3); font-size: 0.9em; }
+
+@media (min-width: 54rem) {
+  .defs.cols { columns: 2; column-gap: 2.5rem; }
+  .defs.cols dt { break-after: avoid; }
+  .defs.cols dd { break-inside: avoid; margin-bottom: 0.9rem; }
+}
+
+/* ── feedback form ────────────────────────────────────────────────────── */
+
+.form-status {
+  border-left: 3px solid var(--good);
+  background: var(--surface);
+  padding: 0.9rem 1.1rem; margin: 1.5rem 0 0;
+  border-radius: 0 7px 7px 0; max-width: 34rem; font-size: 0.95rem;
+}
+.form-status.err { border-left-color: var(--crit, #BF4040); }
+.form-status strong { display: block; margin-bottom: 0.15rem; }
+.form-status[hidden] { display: none; }
+
+.field-error { font-size: 0.83rem; color: #BF4040; min-height: 1em; }
+.field-error:empty { display: none; }
+.form .optional { font-weight: 400; color: var(--ink-3); }
+
+/* The honeypot must be reachable by a bot parsing the DOM and invisible to a
+   person, so it is moved off-screen rather than display:none — some bots skip
+   hidden fields, which would defeat the trap. */
+.gotcha {
+  position: absolute !important; left: -9999px;
+  width: 1px; height: 1px; opacity: 0;
+}
+
+.form [aria-invalid="true"] { border-color: #BF4040; }
